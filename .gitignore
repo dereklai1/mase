@@ -136,4 +136,4 @@ venv.bak/
 # vscode
 .vscode
 
-lab1_output/
+lab1_output*/

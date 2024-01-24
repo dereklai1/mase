@@ -45,6 +45,29 @@ class JSC_Tiny(nn.Module):
         return self.seq_blocks(x)
 
 
+# ADLS Lab 1: Implement a network that has in total around 10x more parameters
+# JSC has 16 input features and 5 output classes
+class JSC_Medium(nn.Module):
+    def __init__(self, info):
+        super(JSC_Medium, self).__init__()
+
+        self.seq = nn.Sequential(
+            nn.BatchNorm1d(16),
+            nn.ReLU(),
+
+            nn.Linear(16, 32),
+            nn.ReLU(),
+
+            nn.Linear(32, 16),
+            nn.ReLU(),
+
+            nn.Linear(16, 5)
+        )
+
+    def forward(self, x):
+        return self.seq(x)
+
+
 class JSC_S(nn.Module):
     def __init__(self, info):
         super(JSC_S, self).__init__()
@@ -94,3 +117,7 @@ def get_jsc_tiny(info):
 
 def get_jsc_s(info):
     return JSC_S(info)
+
+
+def get_jsc_m(info):
+    return JSC_Medium(info)
