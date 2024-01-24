@@ -18,6 +18,7 @@ def process_tests(dir: str):
         "epochs": [],
         "batch_size": [],
         "learning_rate": [],
+        "best_train_acc": [],
         "test_acc": [],
         "test_loss": [],
         "test_acc_steps": [] # list of dataframes
@@ -39,6 +40,7 @@ def process_tests(dir: str):
         max_len_steps = len(train_acc_steps)
         for step, scalar in enumerate(train_acc_steps):
             train_acc_data.append((step / max_len_steps, scalar.value))
+        data["best_train_acc"].append(max(train_acc_data))
         data["test_acc_steps"].append(train_acc_data)
 
         # Process Summary Dataframe
