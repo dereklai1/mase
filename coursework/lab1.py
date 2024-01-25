@@ -90,7 +90,8 @@ def sweep(timestamp: str):
 
 def long_epoch(timestamp: str):
     config = {
-        "epochs": [80, 120, 160, 200],
+        # "epochs": [80, 120, 160, 200],
+        "epochs": [400, 600, 800],
         "batch-size": [256],
         "learning-rate": [0.00001, 0.001, 0.1]
     }
@@ -131,10 +132,10 @@ if __name__ == "__main__":
     # sweep(timestamp)
 
     # Long epoch config
-    # long_epoch(timestamp)
+    long_epoch(timestamp)
 
     # Conduct a sweep over batch size vs. Learning rate
     # sweep_batch_size_learn_rate(timestamp)
 
     # Run custom jsc-m net
-    custom_nn(timestamp)
+    # custom_nn(timestamp)

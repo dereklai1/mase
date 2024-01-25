@@ -38,9 +38,11 @@ def process_tests(dir: str):
         train_acc_data = []
         # Normalise integer steps between 0-1 so easier to graph
         max_len_steps = len(train_acc_steps)
+        best_train_acc = 0
         for step, scalar in enumerate(train_acc_steps):
             train_acc_data.append((step / max_len_steps, scalar.value))
-        data["best_train_acc"].append(max(train_acc_data))
+            best_train_acc = max(best_train_acc, scalar.value)
+        data["best_train_acc"].append(best_train_acc)
         data["test_acc_steps"].append(train_acc_data)
 
         # Process Summary Dataframe
@@ -93,20 +95,36 @@ def plot_batchsize_steps(df: pd.DataFrame):
         height=400
     ).save("batchsize_training_steps.png")
 
-def plot_epoch(df: pd.DataFrame):
-    data = df[df['batch_size'] == 256]
-    alt.Chart(data).mark_line().encode(
+def plot_epoch():
+    run_dir1 = "../lab1_output/sweep-24-01-23-22-53-01"
+    df1 = process_tests(run_dir1)
+    df1 = df1[df1['batch_size'] == 256]
+    run_dir2 = "../lab1_output/long-epoch-24-01-24-20-32-44"
+    df2 = process_tests(run_dir2)
+    data = pd.concat([df1, df2], axis=0)
+    base = alt.Chart(data)
+    test = base.encode(
         x='epochs:N',
         y=alt.Y('test_acc').scale(zero=False),
         color='learning_rate:N'
-    ).properties(
+    ).mark_line()
+    train = base.encode(
+        x='epochs:N',
+        y=alt.Y('best_train_acc').scale(zero=False),
+        color='learning_rate:N'
+    ).mark_line(
+        strokeDash=[8, 8]
+    )
+
+    (test + train).properties(
         width=800,
         height=400
     ).save("epoch_test_acc.png")
 
-def plot_learning_rate_batch(df: pd.DataFrame):
-    data = df[df['epochs'] == 20]
-    alt.Chart(data).mark_rect().encode(
+def plot_learning_rate_batch():
+    run_dir = "../lab1_output/batch-learn-sweep-24-01-24-20-42-07"
+    df = process_tests(run_dir)
+    alt.Chart(df).mark_rect().encode(
         x='learning_rate:O',
         y='batch_size:O',
         color='test_acc'
@@ -117,8 +135,5 @@ def plot_learning_rate_batch(df: pd.DataFrame):
 
 
 if __name__ == '__main__':
-    run_dir = "../lab1_output/24-01-23-22-53-01"
-    df = process_tests(run_dir)
-    plot_batchsize_steps(df)
-    plot_epoch(df)
-    plot_learning_rate_batch(df)
+    # plot_learning_rate_batch()
+    plot_epoch()
