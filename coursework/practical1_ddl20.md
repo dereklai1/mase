@@ -155,6 +155,8 @@ MaseMetadata parameters.
 
 ### 5. Perform the same quantisation flow to the bigger JSC network that you have trained in lab1. You must be aware that now the `pass_args` for your custom network might be different if you have used more than the `Linear` layer in your network.
 
+The quantization of my JSC-Medium network from lab1 is [here](./lab2/quantise_custom_nn.py). The graph after quantization has been saved to [quantized_graph](./lab2/quantized_graph/).
+
 ### 6. Write code to show and verify that the weights of these layers are indeed quantised. You might need to go through the source code of the implementation of the quantisation pass and also the implementation of the [Quantized Layers](../../machop/chop/passes/transforms/quantize/quantized_modules/linear.py).
 
 ### 7. Load your own pre-trained JSC network, and perform perform the quantisation using the command line interface.

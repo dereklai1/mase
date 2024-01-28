@@ -15,6 +15,7 @@ def json_to_dict(file: str):
 
 def process_tests(dir: str):
     data = {
+        "dir": [],
         "epochs": [],
         "batch_size": [],
         "learning_rate": [],
@@ -42,6 +43,7 @@ def process_tests(dir: str):
         for step, scalar in enumerate(train_acc_steps):
             train_acc_data.append((step / max_len_steps, scalar.value))
             best_train_acc = max(best_train_acc, scalar.value)
+        data["dir"].append(train_folder)
         data["best_train_acc"].append(best_train_acc)
         data["test_acc_steps"].append(train_acc_data)
 
@@ -136,6 +138,11 @@ def plot_learning_rate_batch():
 def analyse_custom_nn():
     run_dir = "../../lab1_output/custom-nn-24-01-25-11-30-58"
     data = process_tests(run_dir)
+    best = data.sort_values("test_acc", ascending=False)
+    best['dir'] = best['dir'].str.removeprefix("../../lab1_output/")
+    best = best.drop(['test_acc_steps'], axis=1)
+    print("Top Test Accuracy:")
+    print(best.head(n=10))
     print("Best acc:", data['test_acc'].max())
     alt.Chart(data).mark_line().encode(
         alt.X('learning_rate:O'),
