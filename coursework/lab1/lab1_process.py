@@ -80,7 +80,7 @@ def plot_batchsize_steps(df: pd.DataFrame):
     data = data.drop(['epochs', 'learning_rate', 'test_loss', 'test_acc'], axis=1)
     data = data.explode('test_acc_steps')
     split_steps = pd.DataFrame(data['test_acc_steps'].to_list(), index=data.index)
-    data[['normalised_step', 'accuracy']] = split_steps
+    data[['normalised_step', 'train_accuracy']] = split_steps
     data = data.drop(['test_acc_steps'], axis=1)
     alt.Chart(data).mark_line(
         strokeWidth=1,
@@ -88,7 +88,7 @@ def plot_batchsize_steps(df: pd.DataFrame):
         opacity=0.9
     ).encode(
         x='normalised_step',
-        y=alt.Y('accuracy').scale(zero=False),
+        y=alt.Y('train_accuracy').scale(zero=False),
         color='batch_size:N'
     ).properties(
         width=800,
@@ -96,10 +96,10 @@ def plot_batchsize_steps(df: pd.DataFrame):
     ).save("batchsize_training_steps.png")
 
 def plot_epoch():
-    run_dir1 = "../lab1_output/sweep-24-01-23-22-53-01"
+    run_dir1 = "../../lab1_output/sweep-24-01-23-22-53-01"
     df1 = process_tests(run_dir1)
     df1 = df1[df1['batch_size'] == 256]
-    run_dir2 = "../lab1_output/long-epoch-24-01-24-20-32-44"
+    run_dir2 = "../../lab1_output/long-epoch-24-01-24-20-32-44"
     df2 = process_tests(run_dir2)
     data = pd.concat([df1, df2], axis=0)
     base = alt.Chart(data)
@@ -122,7 +122,7 @@ def plot_epoch():
     ).save("epoch_test_acc.png")
 
 def plot_learning_rate_batch():
-    run_dir = "../lab1_output/batch-learn-sweep-24-01-24-20-42-07"
+    run_dir = "../../lab1_output/batch-learn-sweep-24-01-24-20-42-07"
     df = process_tests(run_dir)
     alt.Chart(df).mark_rect().encode(
         x='learning_rate:O',
@@ -133,7 +133,21 @@ def plot_learning_rate_batch():
         height=600
     ).save("learning_rate_vs_batch.png")
 
+def analyse_custom_nn():
+    run_dir = "../../lab1_output/custom-nn-24-01-25-11-30-58"
+    data = process_tests(run_dir)
+    print("Best acc:", data['test_acc'].max())
+    alt.Chart(data).mark_line().encode(
+        alt.X('learning_rate:O'),
+        alt.Y('test_acc:Q').scale(zero=False),
+        # color='learning_rate:N',
+        # size='learning_rate:N'
+    ).properties(
+        width=300,
+        height=300
+    ).save("custom_nn.png")
 
 if __name__ == '__main__':
     # plot_learning_rate_batch()
-    plot_epoch()
+    # plot_epoch()
+    analyse_custom_nn()

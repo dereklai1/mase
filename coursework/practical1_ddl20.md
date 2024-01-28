@@ -79,16 +79,79 @@ Implemented JSC-Medium network in [__init__.py](../machop/chop/models/physical/_
 
 ### 5. Test your implementation and evaluate its performance.
 
-
+...
 
 ## Lab 2
 ### 1. Explain the functionality of `report_graph_analysis_pass` and its printed jargons such as `placeholder`, `get_attr` ... You might find the doc of [torch.fx](https://pytorch.org/docs/stable/fx.html) useful.
 
+`report_graph_analysis_pass` is an analysis pass in MASE that provides a short
+summary of the model. An analysis pass means that it shouldn't change the graph.
+It first prints out the entire torch `fx_graph` which is an IR that reprents the
+basic building blocks of the model.
+
+This is the output of `report_graph_analysis_pass`:
+
+```
+graph():
+    %x : [num_users=1] = placeholder[target=x]
+    %seq_blocks_0 : [num_users=1] = call_module[target=seq_blocks.0](args = (%x,), kwargs = {})
+    %seq_blocks_1 : [num_users=1] = call_module[target=seq_blocks.1](args = (%seq_blocks_0,), kwargs = {})
+    %seq_blocks_2 : [num_users=1] = call_module[target=seq_blocks.2](args = (%seq_blocks_1,), kwargs = {})
+    %seq_blocks_3 : [num_users=1] = call_module[target=seq_blocks.3](args = (%seq_blocks_2,), kwargs = {})
+    return seq_blocks_3
+Network overview:
+{'placeholder': 1, 'get_attr': 0, 'call_function': 0, 'call_method': 0, 'call_module': 4, 'output': 1}
+Layer types:
+[BatchNorm1d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True), ReLU(inplace=True), Linear(in_features=16, out_features=5, bias=True), ReLU(inplace=True)]
+```
+
+The documentation for what every node means is
+[here](https://pytorch.org/docs/stable/fx.html#torch.fx.Node), but a short
+summary of the ops that are printed above are presented here:
+
+- `placeholder` is an `node.op` which represents an input to a function, the
+target is the name of the variable. `placeholder` can also have `args` which
+will denote the default value the placeholder will take. In this case we have no
+default value.
+- `call_module` is an op that applies the `forward()` of a module. The target is
+the name of the module to apply and the `args` and `kwargs` are the arguments
+to the function exactly like how it works in python.
+- `output` is an op that captures the output in its `args[0]`. In this case, it
+corresponds to the `return seq_blocks_3` statement.
+
+Then the function iterates through the nodes in the graph to extract the module
+it maps to from `MaseMetadata`. It will also iterate through the graph to find
+the native torch fx ops to counts the number of each type of op in the graph.
+
 ### 2. What are the functionalities of `profile_statistics_analysis_pass` and `report_node_meta_param_analysis_pass` respectively?
+
+`profile_statistics_analysis_pass` is an analysis pass which collects statistics
+on any input port of a graph node. This can be either the `data_in_0`,
+`weights` or `bias`. Which modules and inputs as well as what type of statistic
+can all be customised via a configuration dict. All the different statistics are
+in [stat.py](../machop/chop/passes/graph/analysis/statistical_profiler/stat.py).
+
+`report_node_meta_param_analysis_pass` is an analysis pass which will generate a
+tabulated report on meta parameters which are attached to each of the nodes in
+the graph. These can either be some common, software, or hardware parameters
+based on the config passed to the pass.
 
 ### 3. Explain why only 1 OP is changed after the `quantize_transform_pass`.
 
+`quantize_transform_pass` checks the config dict for if the name of the layer
+appears. It will only apply the quantization if it appears, otherwise, it uses
+the default config which is passed in. In this lab, the config default has
+`"name": None`, which indicates that the default is no quantization. This means
+that only the linear layers are quantized, and since there is only 1 linear
+layer in the graph, only 1 OP is quantized.
+
 ### 4. Write some code to traverse both `mg` and `ori_mg`, check and comment on the nodes in these two graphs. You might find the source code for the implementation of `summarize_quantization_analysis_pass` useful.
+
+Created traverse graph flow [here](../machop/chop/passes/graph/analysis/traverse/traverse_graph.py).
+
+The function traverses the graph and prints out the name of each node as well as
+a bunch of MASE specific information such as type and op info, as well as
+MaseMetadata parameters.
 
 ### 5. Perform the same quantisation flow to the bigger JSC network that you have trained in lab1. You must be aware that now the `pass_args` for your custom network might be different if you have used more than the `Linear` layer in your network.
 

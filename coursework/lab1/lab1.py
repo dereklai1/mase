@@ -23,6 +23,7 @@ def train(
     ):
     train_project_name = f"jsc-train-{id}"
     mkdir_if_not_exist(path.join(output_dir, train_project_name))
+    # train_log_file = path.join(output_dir, train_project_name, "train.log")
     cmd = [
         "./ch",
         "train", # Action
@@ -35,11 +36,12 @@ def train(
         "--batch-size", str(cfg["batch-size"]),
         "--learning-rate", str(cfg["learning-rate"]),
         *extra_args,
-        "|", "tee", path.join(output_dir, train_project_name, "train.log")
+        # "|", "tee", train_log_file
     ]
     with open(path.join(output_dir, train_project_name, "config.json"), 'w') as f:
         json.dump(cfg, f, indent=4)
     os.system(" ".join(cmd))
+    # os.system(f"rm {train_log_file}")
 
 def test(
         output_dir: str,
@@ -74,6 +76,7 @@ def test(
             result_dict[k] = float(v)
     with open(results_json, 'w') as f:
         json.dump(result_dict, f, indent=4)
+    os.system(f"rm {test_log_file}")
 
 
 def sweep(timestamp: str):
@@ -82,7 +85,7 @@ def sweep(timestamp: str):
         "batch-size": [64, 256, 1024],
         "learning-rate": [0.00001, 0.001, 0.1]
     }
-    output_dir = f"../lab1_output/sweep-{timestamp}"
+    output_dir = f"../../lab1_output/sweep-{timestamp}"
     for id, cfg in enumerate(product_dict(**config)):
         train(cfg, output_dir, id)
         test(output_dir, id)
@@ -95,7 +98,7 @@ def long_epoch(timestamp: str):
         "batch-size": [256],
         "learning-rate": [0.00001, 0.001, 0.1]
     }
-    output_dir = f"../lab1_output/long-epoch-{timestamp}"
+    output_dir = f"../../lab1_output/long-epoch-{timestamp}"
     for id, cfg in enumerate(product_dict(**config)):
         train(cfg, output_dir, id)
         test(output_dir, id)
@@ -106,7 +109,7 @@ def sweep_batch_size_learn_rate(timestamp: str):
         "batch-size": [64, 128, 256, 512, 1024],
         "learning-rate": [0.00001, 0.0001, 0.001, 0.01, 0.1]
     }
-    output_dir = f"../lab1_output/batch-learn-sweep-{timestamp}"
+    output_dir = f"../../lab1_output/batch-learn-sweep-{timestamp}"
     for id, cfg in enumerate(product_dict(**config)):
         train(cfg, output_dir, id)
         test(output_dir, id)
@@ -116,11 +119,12 @@ def custom_nn(timestamp: str):
     of parameters as JSC-Tiny
     """
     config = {
-        "epochs": [5, 10, 20, 40],
+        "epochs": [40],
         "batch-size": [128],
-        "learning-rate": [0.00001, 0.001, 0.1]
+        # "learning-rate": [0.00001, 0.0005, 0.0001, 0.005, 0.001]
+        "learning-rate": [0.005, 0.01, 0.05, 0.1]
     }
-    output_dir = f"../lab1_output/custom-nn-{timestamp}"
+    output_dir = f"../../lab1_output/custom-nn-{timestamp}"
     for id, cfg in enumerate(product_dict(**config)):
         train(cfg, output_dir, id, model="jsc-m", accel='gpu')
         test(output_dir, id, model="jsc-m")
@@ -132,10 +136,10 @@ if __name__ == "__main__":
     # sweep(timestamp)
 
     # Long epoch config
-    long_epoch(timestamp)
+    # long_epoch(timestamp)
 
     # Conduct a sweep over batch size vs. Learning rate
     # sweep_batch_size_learn_rate(timestamp)
 
     # Run custom jsc-m net
-    # custom_nn(timestamp)
+    custom_nn(timestamp)

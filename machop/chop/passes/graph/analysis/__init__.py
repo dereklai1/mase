@@ -30,3 +30,7 @@ from .pruning import (
     add_natural_sparsity_metadata_analysis_pass,
     hook_inspection_analysis_pass,
 )
+
+from .traverse import (
+    travese_graph_analysis_pass,
+)
