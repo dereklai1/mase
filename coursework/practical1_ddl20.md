@@ -159,4 +159,8 @@ The quantization of my JSC-Medium network from lab1 is [here](./lab2/quantise_cu
 
 ### 6. Write code to show and verify that the weights of these layers are indeed quantised. You might need to go through the source code of the implementation of the quantisation pass and also the implementation of the [Quantized Layers](../../machop/chop/passes/transforms/quantize/quantized_modules/linear.py).
 
+The code to verify that the weights of these layers are indeed quantized correctly is [here](./lab2/quantize_custom_nn.py). The code goes through and finds all the linear layers in the graph. Then it grabs calls the quantizers on both the weights and biases of the layer respectively to get the quantized values. Lastly, these quantized values are fed through the `quant_valid` checking function where it checks that values in the tensor multiplied by `2^(frac_width)` are integer values.
+
 ### 7. Load your own pre-trained JSC network, and perform perform the quantisation using the command line interface.
+
+Run the [quantize_cmdline](./lab2/quantize_cmdline.sh) script to quantize the pretrained model using command line.

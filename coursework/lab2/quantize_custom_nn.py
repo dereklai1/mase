@@ -10,6 +10,9 @@ sys.path.append(
     )
 )
 
+from torch import Tensor
+import torch
+
 from chop.passes.graph import (
     quantize_transform_pass,
     summarize_quantization_analysis_pass,
@@ -25,8 +28,8 @@ from chop.ir.graph.mase_graph import MaseGraph
 from chop.tools.get_input import InputGenerator
 from chop.passes.graph.utils import deepcopy_mase_graph
 from chop.tools.logger import set_logging_verbosity
-from chop.passes.graph.utils import get_mase_op, get_mase_type
-
+from chop.passes.graph.utils import get_mase_op, get_mase_type, get_module_by_name, get_module_by_target
+from chop.passes.graph.transforms.quantize.quantized_modules.linear import _LinearBase
 
 if __name__ == "__main__":
 
@@ -90,23 +93,29 @@ if __name__ == "__main__":
     mg, _ = add_common_metadata_analysis_pass(mg, {"dummy_in": dummy_in , "add_value": True})
 
     # Apply quantization pass and compare
-    # ori_mg = deepcopy_mase_graph(mg)
     mg, _ = quantize_transform_pass(mg, QUANTISE_INFO)
-    # summarize_quantization_analysis_pass(ori_mg, mg)
 
-    # Check that they are actually quantized by applying quantisation transform
-    # fixed ()
+    def quant_valid(x: Tensor, frac_width: int):
+        scaled_x = x * (2 ** frac_width)
+        rounded_x = torch.round(scaled_x)
+        error = torch.sum(rounded_x - scaled_x).item()
+        if error < 1e-9: # Small numerical errors
+            print("Passed quantization check. Tensor Error:", error)
+        else:
+            print("FAILED quantization check. Tensor Error:", error)
+
+
     for n in mg.fx_graph.nodes:
         if get_mase_op(n) != "linear":
             continue
-        print(n.name, get_mase_type(n), get_mase_op(n))
-        data_in = n.meta['mase'].parameters['common']['args']['data_in_0']
-        weight = n.meta['mase'].parameters['common']['args']['weight']
-        bias = n.meta['mase'].parameters['common']['args']['bias']
+        q_linear = get_module_by_target(mg.model, n.target)
+        assert isinstance(q_linear, _LinearBase)
 
-        weight_tensor = weight["value"]
-        weight_tensor = weight_tensor * (2 ** 4)
-        print(data_in)
-        print(weight_tensor)
-        print(bias)
-        break
+        # Check quantized weights & biases
+        linear_cfg = QUANTISE_INFO["linear"]["config"]
+
+        q_w = q_linear.w_quantizer(q_linear.weight)
+        quant_valid(q_w, linear_cfg["weight_frac_width"])
+        if q_linear.bias is not None:
+            q_b = q_linear.b_quantizer(q_linear.bias)
+            quant_valid(q_b, linear_cfg["bias_frac_width"])
