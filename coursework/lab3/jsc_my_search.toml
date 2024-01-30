@@ -71,7 +71,6 @@ compare_to = 32 # compare to FP32
 
 [search.strategy.hw_runner.bitops]
 
-
 [search.strategy.setup]
 n_jobs = 1
 n_trials = 40
@@ -86,9 +85,9 @@ sum_scaled_metrics = false # multi objective
 # loss.direction = "minimize"
 accuracy.scale = 1.0
 accuracy.direction = "maximize"
-average_bitwidth.scale = 0.2
+average_bitwidth.scale = 0.1
 average_bitwidth.direction = "minimize"
-flops.scale = 0.2
+flops.scale = 0.1
 flops.direction = "minimize"
-bitops.scale = 0.4
+bitops.scale = 0.2
 bitops.direction = "minimize"

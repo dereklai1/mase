@@ -37,12 +37,8 @@ def calculate_bitops_analysis_pass(graph, pass_args: dict = {}):
                 logger.debug(f"Input: width={input_width}")
                 logger.debug(f"Weight: width={weight_width}, shape={weight_shape}")
 
-            elif False:
-                # TODO: Implement more layers.
-                pass
-
             else:
-                logger.warn(f"Not implemented for {mase_op}")
+                logger.debug(f"Not implemented for {mase_op}")
                 layer_bitop_cost = 0
 
             total_bitop_cost += layer_bitop_cost
