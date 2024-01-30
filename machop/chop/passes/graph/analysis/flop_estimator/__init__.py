@@ -1,13 +1,13 @@
 import torch
 
 from ..utils import _import_config_from_py_file
-from .deepspeed import estimate_sw_deepspeed
-from .fine_grained import estimate_sw_fine_grained
+# from .deepspeed import estimate_sw_deepspeed
+# from .fine_grained import estimate_sw_fine_grained
 
 estimator_style_map = {
-    "deepspeed": estimate_sw_deepspeed,
+    # "deepspeed": estimate_sw_deepspeed,
     # FIXME
-    "fine-grained": estimate_sw_fine_grained,
+    # "fine-grained": estimate_sw_fine_grained,
 }
 
 

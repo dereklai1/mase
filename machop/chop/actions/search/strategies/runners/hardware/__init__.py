@@ -1,9 +1,14 @@
 from .memory import RunnerAvgBitwidth
 from .dummy import RunnerHWDummy
+from .ptflops import RunnerPtFlops
+from .bitops import RunnerBitOPs
+
 
 HW_RUNNERS = {
     "average_bitwidth": RunnerAvgBitwidth,
     "hw_dummy": RunnerHWDummy,
+    "pt_flops": RunnerPtFlops,
+    "bitops": RunnerBitOPs,
 }
 
 

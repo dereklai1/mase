@@ -1,8 +1,8 @@
 
 # Run this script in machop/ directory
 
-./ch search --config /home/derek/mase/coursework/lab3/jsc_toy_search.toml \
+./ch search --config /home/derek/mase/coursework/lab3/jsc_my_search.toml \
             --load ../coursework/lab1/jsc-tiny-model/best.ckpt \
             --load-type pl \
             --project-dir /home/derek/mase/coursework/lab3 \
-            --project jsc-tiny-search
+            --project jsc-tiny-my-search
