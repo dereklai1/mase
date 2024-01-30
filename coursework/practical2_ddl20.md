@@ -18,16 +18,18 @@ the full `.toml` config can be seen [here](../coursework/lab3/jsc_my_search.toml
 
 The scale factors have been assigned to each of the metrics as shown:
 - accuracy: 1.0
-- average_bitwidth (0.2)
-- flops (0.2)
-- bitops (0.4)
+- average_bitwidth: 0.2
+- flops: 0.1
+- bitops: 0.2
 
 Accuracy is assigned the highest metric as I believe that is the main objective
 of the network architecture search, while other metrics are more related to
 computational complexity or hardware/memory usage. Essentially, a model which
 has a terrible accuracy is useless no matter how computationally efficient it is.
 
-Regarding 
+Regarding the assignment of scale for bitops, flops and average_bitwidth, I
+believe that the bitops and average_bitwidth metrics capture most of the computational
+complexity as well as memory usage.
 
 ### 3. Implement the brute-force search as an additional search method within the system, this would be a new search strategy in MASE.
 
