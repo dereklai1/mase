@@ -90,6 +90,7 @@ class SearchStrategyOptuna(SearchStrategyBase):
             sampled_config = search_space.flattened_indexes_to_config(sampled_indexes)
 
         is_eval_mode = self.config.get("eval_mode", True)
+        # print("Rebuilding model with:", sampled_config)
         model = search_space.rebuild_model(sampled_config, is_eval_mode)
 
         software_metrics = self.compute_software_metrics(
