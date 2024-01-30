@@ -1,0 +1,25 @@
+# basics
+model = "jsc-m"
+dataset = "jsc"
+task = "classification"
+accelerator = "gpu"
+project = "jsc-m"
+seed = 42
+batch_size = 128
+log_every_n_steps = 5
+load_name = "/home/derek/mase/coursework/lab1/custom-nn-model/best.ckpt"
+load_type = "pl"
+project_dir = "/home/derek/mase/coursework/lab2/quantized_model"
+
+[passes.quantize]
+by = "type"
+[passes.quantize.default.config]
+name = "NA"
+[passes.quantize.linear.config]
+name = "integer"
+"data_in_width" = 8
+"data_in_frac_width" = 4
+"weight_width" = 8
+"weight_frac_width" = 4
+"bias_width" = 8
+"bias_frac_width" = 4

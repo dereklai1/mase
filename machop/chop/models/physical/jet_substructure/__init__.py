@@ -56,9 +56,13 @@ class JSC_Medium(nn.Module):
             nn.ReLU(),
 
             nn.Linear(16, 32),
+
+            nn.BatchNorm1d(32),
             nn.ReLU(),
 
             nn.Linear(32, 16),
+
+            nn.BatchNorm1d(16),
             nn.ReLU(),
 
             nn.Linear(16, 5)

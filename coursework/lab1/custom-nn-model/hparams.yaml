@@ -1,7 +1,7 @@
 accelerator: gpu
 accumulate_grad_batches: 1
 action: train
-batch_size: 128
+batch_size: 1024
 config: null
 dataset: jsc
 disable_dataset_cache: false
@@ -9,12 +9,12 @@ github_ci: false
 info: null
 is_pretrained: false
 is_to_auto_requeue: false
-learning_rate: 0.005
+learning_rate: 0.00043939705607607906
 load_name: null
 load_type: mz
 log_every_n_steps: 50
 log_level: info
-max_epochs: 40
+max_epochs: 50
 max_steps: -1
 max_token_len: 512
 model: jsc-m
@@ -22,8 +22,8 @@ num_devices: 1
 num_nodes: 1
 num_targets: 100
 num_workers: 16
-project: jsc-train-3
-project_dir: /home/derek/mase/lab1_output/custom-nn-24-01-25-11-30-58
+project: jsc-train-12
+project_dir: /home/derek/mase/lab1_output/custom-nn-24-01-30-00-44-03
 quant_config: null
 report_to: tensorboard
 seed: 0
@@ -34,4 +34,4 @@ to_debug: false
 trainer_precision: 16-mixed
 training_optimizer: adam
 version: null
-weight_decay: 0
+weight_decay: 1.0e-07

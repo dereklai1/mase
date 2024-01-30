@@ -3,6 +3,7 @@ import itertools
 from datetime import datetime
 from os import path
 import json
+import numpy as np
 
 
 def product_dict(**kwargs):
@@ -35,6 +36,7 @@ def train(
         "--max-epochs", str(cfg["epochs"]),
         "--batch-size", str(cfg["batch-size"]),
         "--learning-rate", str(cfg["learning-rate"]),
+        "--weight-decay", str(cfg["weight-decay"]),
         *extra_args,
         # "|", "tee", train_log_file
     ]
@@ -83,9 +85,10 @@ def sweep(timestamp: str):
     config = {
         "epochs": [5, 10, 20, 40],
         "batch-size": [64, 256, 1024],
-        "learning-rate": [0.00001, 0.001, 0.1]
+        "learning-rate": [0.00001, 0.001, 0.1],
+        "weight-decay": [1e-7],
     }
-    output_dir = f"../../lab1_output/sweep-{timestamp}"
+    output_dir = f"../lab1_output/sweep-{timestamp}"
     for id, cfg in enumerate(product_dict(**config)):
         train(cfg, output_dir, id)
         test(output_dir, id)
@@ -96,9 +99,10 @@ def long_epoch(timestamp: str):
         # "epochs": [80, 120, 160, 200],
         "epochs": [400, 600, 800],
         "batch-size": [256],
-        "learning-rate": [0.00001, 0.001, 0.1]
+        "learning-rate": [0.00001, 0.001, 0.1],
+        "weight-decay": [1e-7],
     }
-    output_dir = f"../../lab1_output/long-epoch-{timestamp}"
+    output_dir = f"../lab1_output/long-epoch-{timestamp}"
     for id, cfg in enumerate(product_dict(**config)):
         train(cfg, output_dir, id)
         test(output_dir, id)
@@ -107,9 +111,10 @@ def sweep_batch_size_learn_rate(timestamp: str):
     config = {
         "epochs": [10],
         "batch-size": [64, 128, 256, 512, 1024],
-        "learning-rate": [0.00001, 0.0001, 0.001, 0.01, 0.1]
+        "learning-rate": [0.00001, 0.0001, 0.001, 0.01, 0.1],
+        "weight-decay": [1e-7],
     }
-    output_dir = f"../../lab1_output/batch-learn-sweep-{timestamp}"
+    output_dir = f"../lab1_output/batch-learn-sweep-{timestamp}"
     for id, cfg in enumerate(product_dict(**config)):
         train(cfg, output_dir, id)
         test(output_dir, id)
@@ -119,12 +124,13 @@ def custom_nn(timestamp: str):
     of parameters as JSC-Tiny
     """
     config = {
-        "epochs": [40],
-        "batch-size": [128],
-        # "learning-rate": [0.00001, 0.0005, 0.0001, 0.005, 0.001]
-        "learning-rate": [0.005, 0.01, 0.05, 0.1]
+        "epochs": [50],
+        "batch-size": [1024],
+        "learning-rate": np.logspace(-5.5, -3, num=8),
+        # "weight-decay": [0, 1e-9], # split 1
+        "weight-decay": [1e-7, 1e-5], # split 2
     }
-    output_dir = f"../../lab1_output/custom-nn-{timestamp}"
+    output_dir = f"../lab1_output/custom-nn-{timestamp}"
     for id, cfg in enumerate(product_dict(**config)):
         train(cfg, output_dir, id, model="jsc-m", accel='gpu')
         test(output_dir, id, model="jsc-m")

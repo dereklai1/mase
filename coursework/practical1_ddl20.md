@@ -17,7 +17,7 @@ Normalised training steps means that the step we start training is assigned 0
 and the step we stop training is 1. For these training runs, the number of
 epochs was 10 and the learning rate was set to 0.001.
 
-![Image](./batchsize_training_steps.png)
+![Image](./lab1/img/batchsize_training_steps.png)
 
 From the graph above we can verify that:
 - Smaller batch size converges quicker to the final accuracy for these
@@ -39,7 +39,7 @@ The graph below shows the effect of epoch number on the training and test
 accuracy. All configurations had a constant batch size of 256. The dotted lines
 show the training accuracy and the solid lines show test accuracy.
 
-![Image](./epoch_test_acc.png)
+![Image](./lab1/img/epoch_test_acc.png)
 
 The high learning rates don't converge in terms of training accuracy and stay
 relatively constant when compared to the curve with learning rate 0.00001.
@@ -68,18 +68,33 @@ to tolerate larger learning rates to converge quicker.
 The graph below shows the effect of varying the learning rate and batch size vs.
 the test accuracy of the model after training for 10 epochs.
 
-![Image](./learning_rate_vs_batch.png)
+![Image](./lab1/img/learning_rate_vs_batch.png)
 
 We can validate that larger batch sizes will perform better and with larger
 learning rates and vice versa.
 
 ### 4. Implement a network that has in total around 10x more parameters than the toy network.
 
-Implemented JSC-Medium network in [__init__.py](../machop/chop/models/physical/__init__.py)
+Implemented JSC-Medium network in [__init__.py](../machop/chop/models/physical/__init__.py).
+This model has around 1.2k parameters.
 
 ### 5. Test your implementation and evaluate its performance.
 
-...
+A sweep was done across different learning rates to find the best
+hyper-parameter for this model while the batch size and number of epochs were
+fixed to 1024 and 50 respectively to ensure reasonable training times.
+
+![Image](./lab1/img/custom_nn_learning_rate.png)
+
+The best training (validation) accuracy achieved was 0.783203, which had a test
+accuracy of 0.741465.
+
+Compared to the best tiny model before that had a validation_acc of 0.859375 and
+test accuracy of 0.694120, we have increased the accuracy of the model by 5% by
+scaling to larger models. This is not a significant gain, but with more
+architecture modification and hyper-parameter tuning, we should be able to
+increase the accuracy further.
+
 
 ## Lab 2
 ### 1. Explain the functionality of `report_graph_analysis_pass` and its printed jargons such as `placeholder`, `get_attr` ... You might find the doc of [torch.fx](https://pytorch.org/docs/stable/fx.html) useful.

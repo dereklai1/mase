@@ -22,7 +22,8 @@ def process_tests(dir: str):
         "best_train_acc": [],
         "test_acc": [],
         "test_loss": [],
-        "test_acc_steps": [] # list of dataframes
+        # "weight_decay": [],
+        "test_acc_steps": [], # list of dataframes
     }
     training_folders = glob(path.join(dir, "jsc-train*"))
     for train_folder in training_folders:
@@ -55,6 +56,7 @@ def process_tests(dir: str):
         data["epochs"].append(config["epochs"])
         data["batch_size"].append(config["batch-size"])
         data["learning_rate"].append(config["learning-rate"])
+        # data["weight_decay"].append(config["weight-decay"])
         data["test_acc"].append(results["test_acc_epoch"])
         data["test_loss"].append(results["test_loss_epoch"])
 
@@ -77,13 +79,13 @@ def plot_batchsize_summary(df: pd.DataFrame):
         color='learning_rate:N'
     ).save("batch_loss.png")
 
-def plot_batchsize_steps(df: pd.DataFrame):
-    data = df[(df['epochs'] == 10) & (df["learning_rate"] == 0.00100)]
-    data = data.drop(['epochs', 'learning_rate', 'test_loss', 'test_acc'], axis=1)
+def plot_batchsize_steps(data: pd.DataFrame):
+    # data = df[(df['epochs'] == 10) & (df["learning_rate"] == 0.00100)]
+    # data = data.drop(['epochs', 'learning_rate', 'test_loss', 'test_acc'], axis=1)
     data = data.explode('test_acc_steps')
     split_steps = pd.DataFrame(data['test_acc_steps'].to_list(), index=data.index)
     data[['normalised_step', 'train_accuracy']] = split_steps
-    data = data.drop(['test_acc_steps'], axis=1)
+    data = data.drop(['test_acc_steps', 'test_loss', 'test_acc'], axis=1)
     alt.Chart(data).mark_line(
         strokeWidth=1,
         interpolate='basis',
@@ -91,11 +93,12 @@ def plot_batchsize_steps(df: pd.DataFrame):
     ).encode(
         x='normalised_step',
         y=alt.Y('train_accuracy').scale(zero=False),
-        color='batch_size:N'
+        color='learning_rate:N',
+        detail='weight_decay:N',
     ).properties(
         width=800,
         height=400
-    ).save("batchsize_training_steps.png")
+    ).save("learning_rate_training.png")
 
 def plot_epoch():
     run_dir1 = "../../lab1_output/sweep-24-01-23-22-53-01"
@@ -135,16 +138,16 @@ def plot_learning_rate_batch():
         height=600
     ).save("learning_rate_vs_batch.png")
 
-def analyse_custom_nn():
-    run_dir = "../../lab1_output/custom-nn-24-01-25-11-30-58"
-    data = process_tests(run_dir)
+def analyse_custom_nn(data):
     best = data.sort_values("test_acc", ascending=False)
     best['dir'] = best['dir'].str.removeprefix("../../lab1_output/")
     best = best.drop(['test_acc_steps'], axis=1)
     print("Top Test Accuracy:")
     print(best.head(n=10))
     print("Best acc:", data['test_acc'].max())
-    alt.Chart(data).mark_line().encode(
+    alt.Chart(data).configure_axisX(
+        labelLimit=50,
+    ).mark_line().encode(
         alt.X('learning_rate:O'),
         alt.Y('test_acc:Q').scale(zero=False),
         # color='learning_rate:N',
@@ -155,6 +158,18 @@ def analyse_custom_nn():
     ).save("custom_nn.png")
 
 if __name__ == '__main__':
-    # plot_learning_rate_batch()
-    # plot_epoch()
-    analyse_custom_nn()
+
+    # data1 = process_tests("../../lab1_output/custom-nn-24-01-30-00-43-09")
+    # data2 = process_tests("../../lab1_output/custom-nn-24-01-30-00-44-03")
+    # data = pd.concat([data1, data2], axis=0)
+    # # analyse_custom_nn()
+    # top = data.sort_values('best_train_acc', ascending=False)
+    # top["dir"] = top["dir"].str[22:]
+    # print(top)
+    # plot_batchsize_steps(data)
+    # analyse_custom_nn(data)
+
+    data = process_tests("../../lab1_output/batch-learn-sweep-24-01-24-20-42-07")
+    top = data.sort_values('best_train_acc', ascending=False)
+    top["dir"] = top["dir"].str[22:]
+    print(top)
