@@ -56,6 +56,7 @@ module_data = {
     "linear": {"input": "data_in"},
     # https://pytorch.org/docs/stable/_modules/torch/nn/modules/activation.html#ReLU
     "relu": {"input": "data_in"},
+    "leakyrelu": {"input": "data_in"},
     # https://pytorch.org/docs/stable/_modules/torch/nn/modules/activation.html#Hardtanh
     "hardtanh": {"input": "data_in"},
     "relu6": {"input": "data_in"},

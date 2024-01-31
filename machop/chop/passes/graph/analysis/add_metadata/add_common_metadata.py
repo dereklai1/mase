@@ -73,6 +73,8 @@ def graph_iterator_for_mase_ops(graph):
                 mase_op = "linear"
             elif isinstance(module, nn.ReLU):
                 mase_op = "relu"
+            elif isinstance(module, nn.LeakyReLU):
+                mase_op = "leakyrelu"
             elif isinstance(module, nn.Hardtanh):  # TODO: This is not implemented yet
                 mase_op = "hardtanh"
             elif isinstance(module, nn.Embedding):

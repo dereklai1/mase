@@ -27,4 +27,12 @@ INTERNAL_COMP = {
             ],
         },
     ],
+    "leakyrelu": [
+        {
+            "name": "fixed_leaky_relu",
+            "dependence_files": [
+                "activations/rtl/fixed_leaky_relu.sv",
+            ],
+        },
+    ],
 }

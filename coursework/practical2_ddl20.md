@@ -48,3 +48,7 @@ iterations will increase exponentially with the number of parameters you are
 searching through. This means it becomes computationally unfeasable to search
 through a space for larger models with many layers unless you drastically reduce
 the number of parameters.
+
+## Lab 4
+
+I have chosen to implement Leaky Relu
