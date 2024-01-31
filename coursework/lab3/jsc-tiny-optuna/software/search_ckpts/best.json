@@ -1,26 +1,26 @@
 {
     "0":{
-        "number":0,
+        "number":6,
         "value":[
-            0.667011857,
-            0.6,
-            576.0,
+            0.5855242014,
+            0.4,
+            384.0,
             9.6
         ],
         "software_metrics":{
-            "loss":0.9847222567,
-            "accuracy":0.667011857
+            "loss":1.1285629272,
+            "accuracy":0.5855242014
         },
         "hardware_metrics":{
-            "average_bitwidth":6.0,
-            "memory_density":5.3333333333,
+            "average_bitwidth":4.0,
+            "memory_density":8.0,
             "flops":96,
-            "bitops":2880
+            "bitops":1920
         },
         "scaled_metrics":{
-            "accuracy":0.667011857,
-            "average_bitwidth":0.6,
-            "bitops":576.0,
+            "accuracy":0.5855242014,
+            "average_bitwidth":0.4,
+            "bitops":384.0,
             "flops":9.6
         },
         "sampled_config":{
@@ -34,9 +34,9 @@
                     "name":"integer",
                     "data_in_width":6,
                     "data_in_frac_width":null,
-                    "weight_width":6,
+                    "weight_width":4,
                     "weight_frac_width":null,
-                    "bias_width":8,
+                    "bias_width":6,
                     "bias_frac_width":null
                 }
             },
@@ -60,196 +60,16 @@
         }
     },
     "1":{
-        "number":1,
+        "number":8,
         "value":[
-            0.6178742647,
-            0.4,
-            512.0,
-            9.6
-        ],
-        "software_metrics":{
-            "loss":1.0086154938,
-            "accuracy":0.6178742647
-        },
-        "hardware_metrics":{
-            "average_bitwidth":4.0,
-            "memory_density":8.0,
-            "flops":96,
-            "bitops":2560
-        },
-        "scaled_metrics":{
-            "accuracy":0.6178742647,
-            "average_bitwidth":0.4,
-            "bitops":512.0,
-            "flops":9.6
-        },
-        "sampled_config":{
-            "seq_blocks_1":{
-                "config":{
-                    "name":null
-                }
-            },
-            "seq_blocks_2":{
-                "config":{
-                    "name":"integer",
-                    "data_in_width":8,
-                    "data_in_frac_width":null,
-                    "weight_width":4,
-                    "weight_frac_width":null,
-                    "bias_width":2,
-                    "bias_frac_width":null
-                }
-            },
-            "seq_blocks_3":{
-                "config":{
-                    "name":null
-                }
-            },
-            "default":{
-                "config":{
-                    "name":"integer",
-                    "bypass":true,
-                    "bias_frac_width":5,
-                    "bias_width":8,
-                    "data_in_frac_width":5,
-                    "data_in_width":8,
-                    "weight_frac_width":3,
-                    "weight_width":8
-                }
-            }
-        }
-    },
-    "2":{
-        "number":3,
-        "value":[
-            0.5697617531,
-            0.2,
-            256.0,
-            9.6
-        ],
-        "software_metrics":{
-            "loss":1.0541576147,
-            "accuracy":0.5697617531
-        },
-        "hardware_metrics":{
-            "average_bitwidth":2.0,
-            "memory_density":16.0,
-            "flops":96,
-            "bitops":1280
-        },
-        "scaled_metrics":{
-            "accuracy":0.5697617531,
-            "average_bitwidth":0.2,
-            "bitops":256.0,
-            "flops":9.6
-        },
-        "sampled_config":{
-            "seq_blocks_1":{
-                "config":{
-                    "name":null
-                }
-            },
-            "seq_blocks_2":{
-                "config":{
-                    "name":"integer",
-                    "data_in_width":8,
-                    "data_in_frac_width":null,
-                    "weight_width":2,
-                    "weight_frac_width":null,
-                    "bias_width":8,
-                    "bias_frac_width":null
-                }
-            },
-            "seq_blocks_3":{
-                "config":{
-                    "name":null
-                }
-            },
-            "default":{
-                "config":{
-                    "name":"integer",
-                    "bypass":true,
-                    "bias_frac_width":5,
-                    "bias_width":8,
-                    "data_in_frac_width":5,
-                    "data_in_width":8,
-                    "weight_frac_width":3,
-                    "weight_width":8
-                }
-            }
-        }
-    },
-    "3":{
-        "number":7,
-        "value":[
-            0.5550361276,
-            0.2,
-            128.0,
-            9.6
-        ],
-        "software_metrics":{
-            "loss":1.0872911215,
-            "accuracy":0.5550361276
-        },
-        "hardware_metrics":{
-            "average_bitwidth":2.0,
-            "memory_density":16.0,
-            "flops":96,
-            "bitops":640
-        },
-        "scaled_metrics":{
-            "accuracy":0.5550361276,
-            "average_bitwidth":0.2,
-            "bitops":128.0,
-            "flops":9.6
-        },
-        "sampled_config":{
-            "seq_blocks_1":{
-                "config":{
-                    "name":null
-                }
-            },
-            "seq_blocks_2":{
-                "config":{
-                    "name":"integer",
-                    "data_in_width":4,
-                    "data_in_frac_width":null,
-                    "weight_width":2,
-                    "weight_frac_width":null,
-                    "bias_width":8,
-                    "bias_frac_width":null
-                }
-            },
-            "seq_blocks_3":{
-                "config":{
-                    "name":null
-                }
-            },
-            "default":{
-                "config":{
-                    "name":"integer",
-                    "bypass":true,
-                    "bias_frac_width":5,
-                    "bias_width":8,
-                    "data_in_frac_width":5,
-                    "data_in_width":8,
-                    "weight_frac_width":3,
-                    "weight_width":8
-                }
-            }
-        }
-    },
-    "4":{
-        "number":10,
-        "value":[
-            0.5211913586,
+            0.5491304398,
             0.2,
             64.0,
             9.6
         ],
         "software_metrics":{
-            "loss":1.1360942125,
-            "accuracy":0.5211913586
+            "loss":1.1586158276,
+            "accuracy":0.5491304398
         },
         "hardware_metrics":{
             "average_bitwidth":2.0,
@@ -258,7 +78,7 @@
             "bitops":320
         },
         "scaled_metrics":{
-            "accuracy":0.5211913586,
+            "accuracy":0.5491304398,
             "average_bitwidth":0.2,
             "bitops":64.0,
             "flops":9.6
@@ -276,7 +96,7 @@
                     "data_in_frac_width":null,
                     "weight_width":2,
                     "weight_frac_width":null,
-                    "bias_width":6,
+                    "bias_width":4,
                     "bias_frac_width":null
                 }
             },
