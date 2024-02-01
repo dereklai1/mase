@@ -22,45 +22,13 @@ from chop.passes.graph.transforms import (
 
 from chop.tools.logger import set_logging_verbosity
 
-set_logging_verbosity("debug")
-
 import toml
 import torch
 import torch.nn as nn
 from torch.nn import Module
 from chop.actions import simulate
 
-# --------------- Define Models ---------------
-
-class MLP(Module):
-    """
-    Toy FC model for digit recognition on MNIST
-    """
-    def __init__(self) -> None:
-        super().__init__()
-        self.fc1 = nn.Linear(4, 10)
-        self.relu = nn.ReLU()
-
-    def forward(self, x):
-        x = torch.flatten(x, start_dim=1, end_dim=-1)
-        x = self.fc1(x)
-        x = self.relu(x)
-        return x
-
-class MLPLeaky(Module):
-    """
-    Toy FC model for digit recognition on MNIST
-    """
-    def __init__(self) -> None:
-        super().__init__()
-        self.fc1 = nn.Linear(4, 10)
-        self.leaky_relu = nn.LeakyReLU(negative_slope=0.12)
-
-    def forward(self, x):
-        x = torch.flatten(x, start_dim=1, end_dim=-1)
-        x = self.fc1(x)
-        x = self.leaky_relu(x)
-        return x
+# from chop.models.vision. import MLP
 
 
 # --------------- Define MASE Transform Pipeline ---------------
@@ -116,5 +84,16 @@ def hardware_emit_pipeline(model: Module):
 
 
 # --------------- Running Pipeline for both ---------------
-# hardware_emit_pipeline(MLP())
-hardware_emit_pipeline(MLPLeaky())
+
+MODELS = [
+    ("relu", MLP(nn.ReLU, {})),
+    ("leakyrelu", MLP(nn.LeakyReLU, {"negative_slope": 0.12})),
+]
+
+if __name__ == "__main__":
+
+    set_logging_verbosity("debug")
+
+    for name, model in MODELS:
+        print(f"Running {name}...")
+        hardware_emit_pipeline(model)

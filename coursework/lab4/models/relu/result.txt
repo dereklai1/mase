@@ -1,0 +1,2 @@
+test_acc_epoch 0.9297000169754028
+test_loss_epoch 0.2665558159351349

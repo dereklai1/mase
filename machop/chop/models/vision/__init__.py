@@ -61,7 +61,10 @@ from .repvgg import (
     get_repvgg_b3g4,
     get_repvgg_d2se,
 )
-
+from .mnist import (
+    get_mnist_lab4_relu,
+    get_mnist_lab4_leakyrelu,
+)
 from .lfc import get_lfc
 from .cnv import get_cnv, get_cnv_residual
 
@@ -105,6 +108,19 @@ VISION_MODELS = {
         "get_model_fn_image_classification": wideresnet28_cifar,
         "info": MaseModelInfo(
             "wideresnet28_cifar", model_source="torchvision", task_type="vision", image_classification=True, is_fx_traceable=True
+        ),
+    },
+    # ADLS Lab4 MNIST
+    "mnist_lab4_relu": {
+        "get_model_fn_image_classification": get_mnist_lab4_relu,
+        "info": MaseModelInfo(
+            "mnist_lab4_relu", model_source="vision_others", task_type="vision", image_classification=True, is_fx_traceable=True
+        ),
+    },
+    "mnist_lab4_leakyrelu": {
+        "get_model_fn_image_classification": get_mnist_lab4_leakyrelu,
+        "info": MaseModelInfo(
+            "mnist_lab4_leakyrelu", model_source="vision_others", task_type="vision", image_classification=True, is_fx_traceable=True
         ),
     },
     # mobilenet v2

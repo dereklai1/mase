@@ -51,4 +51,18 @@ the number of parameters.
 
 ## Lab 4
 
-I have chosen to implement Leaky Relu
+I have chosen to implement [LeakyReLU](https://pytorch.org/docs/stable/generated/torch.nn.LeakyReLU.html#torch.nn.LeakyReLU) as my PyTorch layer.
+
+To test the hardware accuracy, I have trained two simple MNIST models:
+- `MNISTLab4ReLU` - FC net w/ ReLU
+- `MNISTLab4LeakyReLU` - FC net w/ LeakyReLU
+
+Their software test accuracies are thses respectively:
+- `MNISTLab4ReLU` - 0.9297
+- `MNISTLab4LeakyReLU` - 0.9373
+
+Their training/validation accuracy curves are also shown below.
+
+![Image](./lab4/img/validation_acc.png)
+
+Now we will try to

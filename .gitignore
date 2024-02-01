@@ -141,5 +141,6 @@ venv.bak/
 .vscode
 
 lab1_output*/
+lab4_output*/
 # Data files for hardware simulation
 *.dat
