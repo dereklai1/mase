@@ -27,8 +27,9 @@ import torch
 import torch.nn as nn
 from torch.nn import Module
 from chop.actions import simulate
-
-# from chop.models.vision. import MLP
+from chop.tools.checkpoint_load import load_model
+from chop.models import get_model_info, get_model
+from chop.dataset import MaseDataModule
 
 
 # --------------- Define MASE Transform Pipeline ---------------
@@ -39,7 +40,7 @@ def hardware_emit_pipeline(model: Module):
 
     # Provide a dummy input for the graph so it can use for tracing
     batch_size = 1
-    x = torch.randn((batch_size, 2, 2))
+    x = torch.randn((batch_size, 28, 28))
     dummy_in = {"x": x}
 
     mg, _ = init_metadata_analysis_pass(mg, None)
@@ -83,17 +84,35 @@ def hardware_emit_pipeline(model: Module):
     simulate(skip_build=False, skip_test=False)
 
 
+def model_load(model_name: str, chkpt_path: str):
+    data_module = MaseDataModule(
+        name="mnist",
+        batch_size=8,
+        model_name=model_name,
+        num_workers=0,
+    )
+    data_module.prepare_data()
+    data_module.setup()
+    model = get_model(
+        model_name,
+        task="cls",
+        dataset_info=data_module.dataset_info,
+        pretrained=False
+    )
+    model = load_model(load_name=chkpt_path, load_type="pl", model=model)
+    return model
+
 # --------------- Running Pipeline for both ---------------
 
 MODELS = [
-    ("relu", MLP(nn.ReLU, {})),
-    ("leakyrelu", MLP(nn.LeakyReLU, {"negative_slope": 0.12})),
+    ("mnist_lab4_relu", "/home/derek/mase/coursework/lab4/models/relu/best.ckpt"),
+    # ("mnist_lab4_leakyrelu", "/home/derek/mase/coursework/lab4/models/leakyrelu/best.ckpt"),
 ]
 
 if __name__ == "__main__":
 
     set_logging_verbosity("debug")
 
-    for name, model in MODELS:
-        print(f"Running {name}...")
+    for name, chkpt_path in MODELS:
+        model = model_load(name, chkpt_path)
         hardware_emit_pipeline(model)

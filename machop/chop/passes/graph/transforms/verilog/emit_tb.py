@@ -29,7 +29,7 @@ async def test(dut):
     with open(tb_path / "tb_obj.dill", "rb") as f:
         tb = dill.load(f)(dut)
 
-    tb.initialize()
+    await tb.initialize()
 
     in_tensors = tb.generate_inputs(batches=3)
     exp_out = tb.model(*list(in_tensors.values()))

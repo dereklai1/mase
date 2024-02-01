@@ -29,7 +29,7 @@ module fixed_leaky_relu #(
     input  logic data_out_0_ready
 );
 
-for (genvar i = 0; i < DATA_IN_0_TENSOR_SIZE_DIM_0; i++) begin : LeakyReLU
+for (genvar i = 0; i < DATA_IN_0_PARALLELISM_DIM_0 * DATA_IN_0_PARALLELISM_DIM_1; i++) begin : LeakyReLU
     always_comb begin
         // negative value, put to zero
         if ($signed(data_in_0[i]) <= 0) begin
