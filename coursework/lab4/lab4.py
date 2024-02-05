@@ -102,6 +102,7 @@ def model_load(model_name: str, chkpt_path: str):
     model = load_model(load_name=chkpt_path, load_type="pl", model=model)
     return model
 
+
 # --------------- Running Pipeline for both ---------------
 
 MODELS = [

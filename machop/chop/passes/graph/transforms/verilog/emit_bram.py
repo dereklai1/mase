@@ -165,7 +165,7 @@ module {node_param_name}_source #(
 
   // Cocotb/verilator does not support array flattening, so
   // we need to manually add some reshaping process.
-  for (genvar j = 0; j < {_cap(param_name)}_TENSOR_SIZE_DIM_0; j++)
+  for (genvar j = 0; j < {_cap(param_name)}_PARALLELISM_DIM_0 * {_cap(param_name)}_PARALLELISM_DIM_1; j++)
     assign data_out[j] = data_vector[{_cap(param_name)}_PRECISION_0*j+{_cap(param_name)}_PRECISION_0-1:{_cap(param_name)}_PRECISION_0*j];
 
   assign data_out_valid = 1;

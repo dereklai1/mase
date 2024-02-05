@@ -24,6 +24,7 @@ async def test(dut):
     from pathlib import Path
     import dill
     from cocotb.triggers import Timer
+    from copy import deepcopy
 
     tb_path = Path.home() / ".mase" / "top" / "hardware" / "test" / "mase_top_tb"
     with open(tb_path / "tb_obj.dill", "rb") as f:
@@ -32,12 +33,19 @@ async def test(dut):
     await tb.initialize()
 
     in_tensors = tb.generate_inputs(batches=3)
-    exp_out = tb.model(*list(in_tensors.values()))
 
-    tb.load_drivers(in_tensors)
+    # Lab4: Reshape
+    # driven_input = rand_data.reshape((batches, 196, 4)) # 784 -> 196 parallelism of 4 inputs
+    driver_input = deepcopy(in_tensors)
+    driver_input["data_in_0"] = in_tensors["data_in_0"].reshape((3, 196, 4))
+
+    exp_out = tb.model(*list(in_tensors.values()))
+    print(exp_out.shape)
+
+    tb.load_drivers(driver_input)
     tb.load_monitors(exp_out)
 
-    await Timer(100, units="us")
+    await Timer(1000, units="us")
 
 
 def _emit_cocotb_test(graph):
@@ -99,7 +107,6 @@ def _emit_cocotb_tb(graph):
             """
             inputs = {}
             for arg, arg_info in graph.meta["mase"]["common"]["args"].items():
-                # Batch dimension always set to 1 in metadata
                 inputs[arg] = torch.rand(([batches] + arg_info["shape"][1:]))
             return inputs
 
@@ -122,7 +129,9 @@ def _emit_cocotb_tb(graph):
 
                 # Append to input driver
                 for batch in arg_batches:
-                    self.input_drivers[arg_idx].append(batch)
+                    # Support beats of smaller chunks to use parallelism
+                    for single_beat in batch:
+                        self.input_drivers[arg_idx].append(single_beat)
 
         def load_monitors(self, expectation):
             self.output_monitors[-1].expect(expectation.tolist())

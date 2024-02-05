@@ -63,3 +63,5 @@ class StreamMonitor(Monitor):
         if self.check:
             if not np.equal(got, exp).all():
                 raise TestFailure("\nGot \n%s, \nExpected \n%s" % (got, exp))
+            else:
+                print(got, exp)

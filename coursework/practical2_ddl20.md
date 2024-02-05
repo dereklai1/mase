@@ -65,4 +65,9 @@ Their training/validation accuracy curves are also shown below.
 
 ![Image](./lab4/img/validation_acc.png)
 
+Notes:
+- Had to fix emit bram pass
+- Had to fix testbench driving full input instead of parallelism
+- Parallelism should not be a global hardware config but applied to each and every arg. `node.meta["mase"]["hardware"]["parallelism"] = [1, 4]`
+
 Now we will try to
