@@ -5,6 +5,8 @@ import re
 import inspect
 from typing import Any
 import torch
+import random
+import numpy as np
 
 from cocotb.runner import get_runner, get_results
 from mase_components.deps import MASE_HW_DEPS
