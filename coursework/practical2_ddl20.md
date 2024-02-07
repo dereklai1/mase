@@ -53,7 +53,7 @@ the number of parameters.
 
 I have chosen to implement [LeakyReLU](https://pytorch.org/docs/stable/generated/torch.nn.LeakyReLU.html#torch.nn.LeakyReLU) as my PyTorch layer.
 
-To test the hardware accuracy, I have trained two simple MNIST models:
+<!-- To test the hardware accuracy, I have trained two simple MNIST models:
 - `MNISTLab4ReLU` - FC net w/ ReLU
 - `MNISTLab4LeakyReLU` - FC net w/ LeakyReLU
 
@@ -68,6 +68,13 @@ Their training/validation accuracy curves are also shown below.
 Notes:
 - Had to fix emit bram pass
 - Had to fix testbench driving full input instead of parallelism
-- Parallelism should not be a global hardware config but applied to each and every arg. `node.meta["mase"]["hardware"]["parallelism"] = [1, 4]`
+- Parallelism should not be a global hardware config but applied to each and every arg. `node.meta["mase"]["hardware"]["parallelism"] = [1, 4]` -->
 
-Now we will try to
+My implementation of LeakyReLU allows for two different ways to parameterise the
+slope when the values passed in are negative:
+1. A hardware friendly version which means that LeakyReLU can only have slopes of the form $2^{-n}, n \in \Z$.
+2. An arbitrary fixed point fractional number of the same width as the input.
+
+Having two different implementations or essentially quantisations for the slope, the user can better decide how they want to tradeoff latency and resource usage vs. accuracy. Both implementations do the LeakyReLU operation combinatorially, however, the one which only allows slope gradients of the form $2^{-n}$ is essentially free as it can be implemented as a simple bitshift, while the fixed point implementation will use a multiplier which will also add substantial delay to the combinatorial path if this block is not pipelined. In terms of accuracy, the LeakyReLU which only supports gradients of form $2^{-n}$ may perform worse than the fixed point if post traning quantization (PTQ) is performed, however, if the original network is trained with the LeakyReLU set to a power of two, this loss in accuracy can be prevented all together.
+
+The SystemVerilog implementation is in [mase_components/activations/rtl/fixed_leaky_relu.sv](../machop/mase_components/activations/rtl/fixed_leaky_relu.sv), and the cocotb test is at [mase_components/activations/test/fixed_leaky_relu_tb.py](../machop/mase_components/activations/test/fixed_leaky_relu_tb.py).
