@@ -33,7 +33,7 @@ complexity as well as memory usage.
 
 ### 3. Implement the brute-force search as an additional search method within the system, this would be a new search strategy in MASE.
 
-Brute force search has been implemented [here](../machop/chop/actions/search/strategies/brute_force.py).
+Brute force search has been implemented [here](../machop/chop/actions/search/strategies/brute_force.py). It takes the cross product of all input configurations and runs them one at a time to find the config with the best score. The calcuation of the score is defined through the `.toml` file.
 
 ### 4. Compare the brute-force search with the TPE based search, in terms of sample efficiency. Comment on the performance difference between the two search methods.
 
@@ -52,23 +52,6 @@ the number of parameters.
 ## Lab 4
 
 I have chosen to implement [LeakyReLU](https://pytorch.org/docs/stable/generated/torch.nn.LeakyReLU.html#torch.nn.LeakyReLU) as my PyTorch layer.
-
-<!-- To test the hardware accuracy, I have trained two simple MNIST models:
-- `MNISTLab4ReLU` - FC net w/ ReLU
-- `MNISTLab4LeakyReLU` - FC net w/ LeakyReLU
-
-Their software test accuracies are thses respectively:
-- `MNISTLab4ReLU` - 0.9297
-- `MNISTLab4LeakyReLU` - 0.9373
-
-Their training/validation accuracy curves are also shown below.
-
-![Image](./lab4/img/validation_acc.png)
-
-Notes:
-- Had to fix emit bram pass
-- Had to fix testbench driving full input instead of parallelism
-- Parallelism should not be a global hardware config but applied to each and every arg. `node.meta["mase"]["hardware"]["parallelism"] = [1, 4]` -->
 
 My implementation of LeakyReLU allows for two different ways to parameterise the
 slope when the values passed in are negative:
