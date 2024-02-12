@@ -7,7 +7,6 @@
 I have implemented these extra metrics:
 - FLOPs by using ptflops
 - BitOPs
-<!-- - Latency Estimation -->
 
 They both have their own [hardware runners](../machop/chop/actions/search/strategies/runners/hardware/) which call into their respective analysis passes in [flop_estimator](../machop/chop/passes/graph/analysis/flop_estimator/ptflops.py) and [quantization](../machop/chop/passes/graph/analysis/quantization/calculate_bitops.py).
 
@@ -37,17 +36,9 @@ Brute force search has been implemented [here](../machop/chop/actions/search/str
 
 ### 4. Compare the brute-force search with the TPE based search, in terms of sample efficiency. Comment on the performance difference between the two search methods.
 
-The performance of the brute-force search will be better than the TPE based
-search as it is able to fully explore the discrete parameter space you give it
-and arrive at a global maxima for your score. On the contrary, the TPE based
-search can only probabilistically conduct local searches and arrive at a local
-maxima which may not be the global one.
+The final neural network performance of the brute-force search will always be better than the TPE based search as it is able to fully explore the discrete parameter space you give it and arrive at a global maxima for your score. On the contrary, the TPE is a search method which uses a history of evaluated hyperparameters to suggest the next set of hyperparameters to test. TPE search may iteratively arrive at a local maxima when it exhausts all iterations, however there is no guarantee that this is the global one.
 
-However, the brute-force approach comes at a cost as the number of search
-iterations will increase exponentially with the number of parameters you are
-searching through. This means it becomes computationally unfeasable to search
-through a space for larger models with many layers unless you drastically reduce
-the number of parameters.
+However, the brute-force approach comes at a cost as the number of search iterations will increase exponentially with the number of parameters you are searching through. This means it becomes computationally unfeasable to search through a space for larger models with many layers unless you drastically reduce the number of parameters.
 
 ## Lab 4
 
